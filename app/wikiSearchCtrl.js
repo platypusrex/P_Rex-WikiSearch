@@ -10,7 +10,6 @@
                     link: 'https://en.wikipedia.org/wiki/' + val.title
                 }
             });
-            console.log($scope.wikiPages);
         };
 
         var onError = function(err){
@@ -21,6 +20,5 @@
             searchService.searchWikipedia(inputValue).then(onSuccess, onError);
         };
 
-        console.log($scope.wikiPages);
     }]);
 }(angular.module('WikiSearchApp')));
