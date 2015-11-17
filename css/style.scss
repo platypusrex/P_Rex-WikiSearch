@@ -1,10 +1,9 @@
-//Sass variable for wikisearch project
+//Sass variables for wikisearch project
 $darkBlue: #22264b;
 $lightGreen: #e6cf8b;
 $lightRed: #b56969;
 $offWhite: #e8edf3;
 $lato: 'Lato', sans-serif;
-$merriweather: 'Merriweather', serif;
 $playfair: 'Playfair Display', serif;
 $londrina: 'Londrina Solid', cursive;
 $iconBreakPoint: 600px;
@@ -74,6 +73,7 @@ body {
 
     &:nth-of-type(2) {
       top: -32px;
+      left: 9px;
     }
   }
 
