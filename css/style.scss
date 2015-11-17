@@ -1,0 +1,290 @@
+//Sass variable for wikisearch project
+$darkBlue: #22264b;
+$lightGreen: #e6cf8b;
+$lightRed: #b56969;
+$offWhite: #e8edf3;
+$lato: 'Lato', sans-serif;
+$merriweather: 'Merriweather', serif;
+$playfair: 'Playfair Display', serif;
+$londrina: 'Londrina Solid', cursive;
+$iconBreakPoint: 600px;
+
+//probably not necessary, but a mixin for border-radius just in case
+@mixin border-radius($radius){
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+}
+
+//the necessary transition/transform mixins
+@mixin transition($values...){
+  -webkit-transition: $values;
+  transition: $values;
+}
+
+@mixin transform($values){
+  -webkit-transform: $values;
+  -ms-transform: $values;
+  transform: $values;
+}
+
+//media query for the Title Wikipedia icons
+//in order to get the 2 sided icons, I had to do some funky positioning on the i tags
+//prevents weirds break point issues by hiding the icons at less than 600px
+@mixin iconBreak {
+  @media(max-width: 600px){
+    @content;
+  }
+}
+
+//box-shadow mixin
+@mixin boxShadow($values) {
+  -webkit-box-shadow: $values;
+  -moz-box-shadow: $values;
+  box-shadow: $values;
+}
+
+//basic styles on the body of the app
+body {
+  background: $darkBlue;
+  font-family: $lato;
+  margin: 3% 0;
+}
+
+// Title Container Styles
+.title-container {
+  .icons {
+    -webkit-perspective: 800px;
+    -webkit-perspective-origin: 50% 50%;
+
+    .wrap:nth-of-type(1) .fa {
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  .wrap {
+    display: inline-block;
+    position: relative;
+    @include transition(transform 750ms ease-in);
+    -webkit-transform-style: preserve-3d;
+
+    &:hover {
+      @include transform(rotate3d(1,0.75,0,360deg));
+    }
+
+    &:nth-of-type(2) {
+      top: -32px;
+    }
+  }
+
+  .fa-wikipedia-w {
+    width: 40px;
+    height: 35px;
+    font-size: 24px;
+    background: $lightRed;
+    @include border-radius(3px);
+    padding: 4px;
+    color: $offWhite;
+    position: absolute;
+    z-index: 2;
+    -webkit-backface-visibility: hidden;
+    @include boxShadow(0 2px 2px 2px rgba(0,0,0,0.2));
+
+
+  }
+
+  .fa-search {
+    @extend .fa-wikipedia-w;
+    @include transform(rotateY(-180deg));
+    z-index: 1;
+    background: $lightGreen;
+  }
+
+  @include iconBreak {
+    .fa-wikipedia-w:nth-of-type(1) {
+      display: none;
+      margin: auto;
+    }
+    .fa-wikipedia-w:nth-of-type(2) {
+      display: none;
+      margin: auto;
+    }
+  }
+
+  h1 {
+    color: $offWhite;
+    font-size: 70px;
+    font-family: $londrina;
+    font-weight: 500;
+    text-shadow: 1px 2px 1px rgba(255, 255, 255, 0.4);
+    display: inline;
+    padding-left: 8px;
+    position: relative;
+  }
+  .lead {
+    color: $offWhite;
+    margin: 60px 0 20px 0;
+  }
+}
+
+// Styles for the Animated Search Box
+.search-container {
+  position: relative;
+
+  .btn {
+    background: $offWhite;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    width: 22px;
+    padding: 0;
+    margin: auto;
+    border: 0;
+    visibility: hidden;
+    @include transition(visibility 100ms 100ms, left 200ms 100ms);
+  }
+
+  .dropdown-toggle .icon-bars-button{
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .dropdown-toggle .icon-bar {
+    margin-bottom:5px;
+    display: block;
+    width: 18px;
+    height: 2px;
+    background-color: $lightRed;
+    border-radius: 1px;
+  }
+  .dropdown-toggle .icon-bar:nth-of-type(1){
+    position: absolute;
+    transform: rotate(-45deg);
+    @include transform(rotate(900deg) translate(0px, 8px));
+    @include transition(transform 300ms 400ms)
+  }
+  .dropdown-toggle .icon-bar:nth-of-type(2){
+    transform: rotate(45deg);
+    @include transform(rotate(-900deg) translate(0, -8px));
+    @include transition(transform 300ms 600ms)
+  }
+}
+
+.circle {
+  font-size: 18px;
+  background: $offWhite;
+  color: $lightRed;
+  text-align: center;
+  display: block;
+  height: 50px;
+  width: 50px;
+  //top: px;
+  border: 4px solid $lightGreen;
+  margin: auto;
+  position: relative;
+  @include border-radius(50%);
+  @include transition(width 200ms linear 100ms, border-radius 200ms linear 100ms);
+
+  &:focus {
+    width: 250px;
+    @include border-radius(2px);
+    @include boxShadow(2px 10px 6px -6px rgba(0,0,0,0.75));
+  }
+
+  &:focus ~ .line {
+    @include transform(rotate(720deg));
+    top: 445px;
+    visibility: hidden;
+    height: 0;
+  }
+
+  @-moz-document url-prefix() {
+    &:focus ~ .line {
+      top: 225px;
+    }
+  }
+
+  &:focus + span .btn {
+    visibility: visible;
+    left: 210px;
+  }
+
+  &:focus + span .btn .icon-bar:nth-of-type(1) {
+    @include transform(rotate(-45deg));
+  }
+
+  &:focus + span .btn .icon-bar:nth-of-type(2) {
+    @include transform(rotate(45deg));
+  }
+}
+
+.line {
+  position: absolute;
+  /*top: 0;*/
+  bottom: 0;
+  left: 56px;
+  right: 0;
+  border-left: 4px solid #e6cf8b;
+  height: 16px;
+  width: 0;
+  margin: auto;
+  @include transform(rotate(-58deg));
+  @include transition(transform 325ms linear 100ms, top 325ms, height 500ms 100ms);
+}
+
+//had some positioning issues with Firefox (firefox is pretty weird about absolute and relative positioning btw)
+//this is a hack or sorts that fixed the positioning issues I had with the line on the search box magnifying glass
+@-moz-document url-prefix() {
+  .line {
+    top: 30px;
+  }
+  .search-container .btn-default {
+    top: 228px;
+
+    .glyphicon-minus:nth-of-type(2){
+      bottom: 3px;
+      left: 1px;
+    }
+  }
+}
+
+// Styles for the Returned Wikipedia Data (the List Group Styles)
+.list-group {
+  position: absolute;
+  margin: 20px 0;
+}
+
+.list-group-item {
+  &:hover {
+    box-shadow: -5px 0 0 $lightGreen;
+  }
+  h2 {
+    font-family: $playfair;
+  }
+}
+
+// Angular Animations for the List Group
+.list-group-item.ng-enter,
+.list-group-item.ng-leave {
+  transition: transform 400ms, margin 600ms;
+}
+
+.list-group-item.ng-enter,
+.list-group-item.ng-leave-active {
+  transform: translate3d(-2000px, 0, 0);
+  margin-bottom: -82px;
+}
+
+.list-group-item.ng-enter-active {
+  transform: translate3d(0, 0, 0);
+  margin-bottom: 1px;
+}
+
+.ng-enter-stagger,
+.ng-leave-stagger {
+  transition-delay: 100ms;
+  transition-duration: 0;
+}
+
